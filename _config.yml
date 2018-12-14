@@ -105,7 +105,7 @@ analytics:
 author:
   name             : "Christopher Bruce Perkins"
   avatar           : # path of avatar image, e.g. "/assets/images/bio-photo.jpg"
-  bio              : "I am an amazing person."
+  bio              : "Data scientist with an interest in Natural Language Processing."
   location         : "Copenhagen, Denmark"
   email            :
   links:
@@ -123,10 +123,10 @@ author:
       # url: "https://facebook.com/"
     - label: "GitHub"
       icon: "fab fa-fw fa-github"
-      # url: "https://github.com/cbruceperkins"
+      url: "https://github.com/cbruceperkins"
     - label: "LinkedIn"
       icon: "fab fa-fw fa-linkedin"
-      # url: "https://www.linkedin.com/in/christopher-bruce-perkins-2a8a2541/"
+      url: "https://www.linkedin.com/in/christopher-bruce-perkins-2a8a2541/"
 
 # Site Footer
 footer:
