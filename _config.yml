@@ -104,7 +104,7 @@ analytics:
 # Site Author
 author:
   name             : "Christopher Bruce Perkins"
-  avatar           : #"/images/profile.JPG/"
+  avatar           : "/images/profile.JPG/"
   bio              : "Data scientist with an interest in Natural Language Processing."
   location         : "Copenhagen, Denmark"
   email            :
