@@ -31,8 +31,7 @@ This is going to be a problem later on if we don't do anything about it. Since w
 
 In order for our machines to process the text data contained in the reviews, we'll need to tokenize it first. We'll be splitting paragraphs and sentences up into single words, and removing a few commonly used words that don't tell us much (think of words like "the" and "to"). We'll do this using *gensim's* preprocessing method:
 
-''' python
-
+```python
 	tokens = []
 	for i in range(0,len(data)):
 	    temp = []
@@ -44,7 +43,7 @@ In order for our machines to process the text data contained in the reviews, we'
 
 	from sklearn.model_selection import train_test_split
 	train, test = train_test_split(tokens, test_size=0.2)
-'''
+```
 
 Clean and simple. While we're at it we might as well randomly split the data up into training and test samples. The ballpark figure for where to split is said to be around 80/20, so we'll go ahead with that.
 
@@ -52,12 +51,11 @@ Clean and simple. While we're at it we might as well randomly split the data up 
 
 Training the vector space our word embeddings will be living in is also a relatively simple task. So simple that we can do it with a couple of lines:
 
-'''python
-
+```python
 	size = 60
 	model = gensim.models.Word2Vec ([row[0] for row in tokens], size=size, window=7, min_count=10, workers=10)
 	model.train([row[0] for row in tqdm(tokens)],total_examples=len([row[0] for row in tokens]),epochs=10)
-'''
+```
 
 *Gensim's* model is fed the review tokens we made earlier and is trained on those unsupervised. Without going into too many details, it's going through all of our reviews and clustering words together based on the context they're used in. The logic being that words used in the same context are similar to eachother. As a simple example think of the words *cat* and *dog*. You would assume that they appear in similar contexts since they are both animals and house pets, but not exactly the same since they're still two distinct species of animal. This would mean that *cat* and *dog* would be grouped closer together than say *cat* and *hotdog*.
 
@@ -67,8 +65,7 @@ With our *W2V* model good to go we can move on to some pre-processing.
 
 In this case we want to train a CNN which will require that all our inputs be the same dimension. If you recall review-length distribution from earlier you can see that there is a pretty wide gap between the shortest and longest reviews. In fact the shortest review the shortest review is only 9 tokens long, while the longest is over 2,000. In this case we'll do some sequence padding. We'll choose a fixed review length *n*, and either shorten the review or add tokens containg the word "PAD" to length *n*:
 
-'''python
-
+```python
 	length = 300
 	for i in range(0,len(train)):
 	    if len(train[i][0]) < length:
@@ -85,8 +82,7 @@ In this case we want to train a CNN which will require that all our inputs be th
 	    
 	    if len(test[i][0]) > length:
 	        test[i][0] = test[i][0][0:length]
-
-'''
+```
 
 That should take care of our length issues. Let's take a look at that distribution one more time:
 
@@ -98,7 +94,7 @@ That will do just fine. Let's move on to the last steps.
 
 Now are data is almost ready to be fed to the model, but first we need to convert it into something our model will understand. Using our *gensim* model we'll convert each word in our reviews into an *m* dimensional word vector (*m=60* in our case):
 
-'''python
+```python
 	trainVec = []
 	testVec = []
 	for i in range(0,len(train)):
@@ -121,12 +117,10 @@ Now are data is almost ready to be fed to the model, but first we need to conver
 	    
 	trainVec = np.array(trainVec)
 	testVec = np.array(testVec)
-'''
-
+```
 After running this we're good to go. Let's start building the model:
 
-''' python
-
+```python
 	from keras.models import Sequential
 	from keras.layers import Dense, Activation, MaxPooling2D
 	from keras.layers import Convolution2D, Flatten, Dropout
@@ -154,7 +148,7 @@ After running this we're good to go. Let's start building the model:
 
 	tensorBoardCallback = TensorBoard(log_dir='./logs', write_graph=True)
 	net.summary()
-'''
+```
 
 I won't go into too much detail about the architecture and kernel dimensions. Suffice it to say this structure gives acceptable results, and is a good starting point towards improving your own state-of-the-art sentiment analysis. I'll just comment on the one *MaxPooling* layer for down sampling and the two *Dropout* layers to prevent overfitting. The model above has just under one million trainable parameters and takes about 20 minutes to train on my machine. With more serious computing power you could easily pump up the number of layers and dimensionality of the data for better results. The chosen model should output a summary like this:
 
