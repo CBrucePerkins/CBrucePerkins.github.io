@@ -52,9 +52,9 @@ Clean and simple. While we're at it we might as well randomly split the data up 
 Training the vector space our word embeddings will be living in is also a relatively simple task. So simple that we can do it with a couple of lines:
 
 ```python
-	size = 60
-	model = gensim.models.Word2Vec ([row[0] for row in tokens], size=size, window=7, min_count=10, workers=10)
-	model.train([row[0] for row in tqdm(tokens)],total_examples=len([row[0] for row in tokens]),epochs=10)
+size = 60
+model = gensim.models.Word2Vec ([row[0] for row in tokens], size=size, window=7, min_count=10, workers=10)
+model.train([row[0] for row in tqdm(tokens)],total_examples=len([row[0] for row in tokens]),epochs=10)
 ```
 
 *Gensim's* model is fed the review tokens we made earlier and is trained on those unsupervised. Without going into too many details, it's going through all of our reviews and clustering words together based on the context they're used in. The logic being that words used in the same context are similar to eachother. As a simple example think of the words *cat* and *dog*. You would assume that they appear in similar contexts since they are both animals and house pets, but not exactly the same since they're still two distinct species of animal. This would mean that *cat* and *dog* would be grouped closer together than say *cat* and *hotdog*.
@@ -66,22 +66,22 @@ With our *W2V* model good to go we can move on to some pre-processing.
 In this case we want to train a CNN which will require that all our inputs be the same dimension. If you recall review-length distribution from earlier you can see that there is a pretty wide gap between the shortest and longest reviews. In fact the shortest review the shortest review is only 9 tokens long, while the longest is over 2,000. In this case we'll do some sequence padding. We'll choose a fixed review length *n*, and either shorten the review or add tokens containg the word "PAD" to length *n*:
 
 ```python
-	length = 300
-	for i in range(0,len(train)):
-	    if len(train[i][0]) < length:
-	        for j in range(0,length-len(train[i][0])):
-	            train[i][0].append("PAD")
-	    
-	    if len(train[i][0]) > length:
-	        train[i][0] = train[i][0][0:length]
-	        
-	for i in range(0,len(test)):
-	    if len(test[i][0]) < length:
-	        for j in range(0,length-len(test[i][0])):
-	            test[i][0].append("PAD")
-	    
-	    if len(test[i][0]) > length:
-	        test[i][0] = test[i][0][0:length]
+length = 300
+for i in range(0,len(train)):
+    if len(train[i][0]) < length:
+        for j in range(0,length-len(train[i][0])):
+            train[i][0].append("PAD")
+    
+    if len(train[i][0]) > length:
+        train[i][0] = train[i][0][0:length]
+        
+for i in range(0,len(test)):
+    if len(test[i][0]) < length:
+        for j in range(0,length-len(test[i][0])):
+            test[i][0].append("PAD")
+    
+    if len(test[i][0]) > length:
+        test[i][0] = test[i][0][0:length]
 ```
 
 That should take care of our length issues. Let's take a look at that distribution one more time:
@@ -95,59 +95,59 @@ That will do just fine. Let's move on to the last steps.
 Now our data is almost ready to be fed to the model, but first we need to convert it into something our model will understand. Using our *gensim* model we'll convert each word in our reviews into an *m* dimensional word vector (*m=60* in our case):
 
 ```python
-	trainVec = []
-	testVec = []
-	for i in range(0,len(train)):
-	    temp = []
-	    for j in range(0,len(train[i][0])):
-	        try:
-	            temp.append(model.wv[train[i][0][j]])
-	        except:
-	            temp.append([0]*size)
-	    trainVec.append(temp)
+trainVec = []
+testVec = []
+for i in range(0,len(train)):
+    temp = []
+    for j in range(0,len(train[i][0])):
+        try:
+            temp.append(model.wv[train[i][0][j]])
+        except:
+            temp.append([0]*size)
+    trainVec.append(temp)
 
-	for i in range(0,len(test)):
-	    temp = []
-	    for j in range(0,len(test[i][0])):
-	        try:
-	            temp.append(model.wv[test[i][0][j]])
-	        except:
-	            temp.append([0]*size)
-	    testVec.append(temp)
-	    
-	trainVec = np.array(trainVec)
-	testVec = np.array(testVec)
+for i in range(0,len(test)):
+    temp = []
+    for j in range(0,len(test[i][0])):
+        try:
+            temp.append(model.wv[test[i][0][j]])
+        except:
+            temp.append([0]*size)
+    testVec.append(temp)
+    
+trainVec = np.array(trainVec)
+testVec = np.array(testVec)
 ```
 After running this we're good to go. Let's start building the model:
 
 ```python
-	from keras.models import Sequential
-	from keras.layers import Dense, Activation, MaxPooling2D
-	from keras.layers import Convolution2D, Flatten, Dropout
-	from keras.layers.embeddings import Embedding
-	from keras.preprocessing import sequence
-	from keras.callbacks import TensorBoard
+from keras.models import Sequential
+from keras.layers import Dense, Activation, MaxPooling2D
+from keras.layers import Convolution2D, Flatten, Dropout
+from keras.layers.embeddings import Embedding
+from keras.preprocessing import sequence
+from keras.callbacks import TensorBoard
 
-	net = Sequential()
-	net.add(Convolution2D(64, 4,input_shape=(length,size,1), data_format='channels_last'))
-	# Convolutional model (3x conv, flatten, 2x dense)
-	net.add(Convolution2D(32,3, padding='same'))
-	net.add(Activation('relu'))
-	net.add(Convolution2D(16,2, padding='same'))
-	net.add(Activation('relu'))
-	net.add(Convolution2D(8,2, padding='same'))
-	net.add(Activation('relu'))
-	net.add(MaxPooling2D(pool_size=(3, 3)))
+net = Sequential()
+net.add(Convolution2D(64, 4,input_shape=(length,size,1), data_format='channels_last'))
+# Convolutional model (3x conv, flatten, 2x dense)
+net.add(Convolution2D(32,3, padding='same'))
+net.add(Activation('relu'))
+net.add(Convolution2D(16,2, padding='same'))
+net.add(Activation('relu'))
+net.add(Convolution2D(8,2, padding='same'))
+net.add(Activation('relu'))
+net.add(MaxPooling2D(pool_size=(3, 3)))
 
-	net.add(Flatten())
-	net.add(Dropout(0.2))
-	net.add(Dense(64,activation='sigmoid'))
-	net.add(Dropout(0.2))
-	net.add(Dense(1,activation='sigmoid'))
-	net.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
+net.add(Flatten())
+net.add(Dropout(0.2))
+net.add(Dense(64,activation='sigmoid'))
+net.add(Dropout(0.2))
+net.add(Dense(1,activation='sigmoid'))
+net.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
 
-	tensorBoardCallback = TensorBoard(log_dir='./logs', write_graph=True)
-	net.summary()
+tensorBoardCallback = TensorBoard(log_dir='./logs', write_graph=True)
+net.summary()
 ```
 
 I won't go into too much detail about the architecture and kernel dimensions. Suffice it to say this structure gives acceptable results, and is a good starting point towards improving your own state-of-the-art sentiment analysis. I'll just comment on the one *MaxPooling* layer for down sampling and the two *Dropout* layers to prevent overfitting. The model above has just under one million trainable parameters and takes about 20 minutes to train on my machine. With more serious computing power you could easily pump up the number of layers and dimensionality of the data for better results. The chosen model should output a summary like this:
