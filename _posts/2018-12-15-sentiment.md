@@ -85,6 +85,7 @@ In this case we want to train a CNN which will require that all our inputs be th
 	    
 	    if len(test[i][0]) > length:
 	        test[i][0] = test[i][0][0:length]
+
 '''
 
 That should take care of our length issues. Let's take a look at that distribution one more time:
@@ -122,7 +123,8 @@ python
 	    
 	trainVec = np.array(trainVec)
 	testVec = np.array(testVec)
-	'''
+
+'''
 
 After running this we're good to go. Let's start building the model:
 
