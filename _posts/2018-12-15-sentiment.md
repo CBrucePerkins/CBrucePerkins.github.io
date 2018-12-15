@@ -31,8 +31,7 @@ This is going to be a problem later on if we don't do anything about it. Since w
 
 In order for our machines to process the text data contained in the reviews, we'll need to tokenize it first. We'll be splitting paragraphs and sentences up into single words, and removing a few commonly used words that don't tell us much (think of words like "the" and "to"). We'll do this using *gensim's* preprocessing method:
 
-'''python
-	# Tokenizing the data
+''' python
 
 	tokens = []
 	for i in range(0,len(data)):
@@ -98,7 +97,8 @@ That will do just fine. Let's move on to the last steps.
 
 Now are data is almost ready to be fed to the model, but first we need to convert it into something our model will understand. Using our *gensim* model we'll convert each word in our reviews into an *m* dimensional word vector (*m=60* in our case):
 
-'''python
+'''
+python
 
 	trainVec = []
 	testVec = []
@@ -126,7 +126,7 @@ Now are data is almost ready to be fed to the model, but first we need to conver
 
 After running this we're good to go. Let's start building the model:
 
-'''python
+''' python
 
 	from keras.models import Sequential
 	from keras.layers import Dense, Activation, MaxPooling2D
