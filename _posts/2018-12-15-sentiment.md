@@ -54,7 +54,6 @@ Clean and simple. While we're at it we might as well randomly split the data up 
 Training the vector space our word embeddings will be living in is also a relatively simple task. So simple that we can do it with a couple of lines:
 
 '''python
-	# Training W2V space
 
 	size = 60
 	model = gensim.models.Word2Vec ([row[0] for row in tokens], size=size, window=7, min_count=10, workers=10)
@@ -70,6 +69,7 @@ With our *W2V* model good to go we can move on to some pre-processing.
 In this case we want to train a CNN which will require that all our inputs be the same dimension. If you recall review-length distribution from earlier you can see that there is a pretty wide gap between the shortest and longest reviews. In fact the shortest review the shortest review is only 9 tokens long, while the longest is over 2,000. In this case we'll do some sequence padding. We'll choose a fixed review length *n*, and either shorten the review or add tokens containg the word "PAD" to length *n*:
 
 '''python
+
 	length = 300
 	for i in range(0,len(train)):
 	    if len(train[i][0]) < length:
@@ -99,6 +99,7 @@ That will do just fine. Let's move on to the last steps.
 Now are data is almost ready to be fed to the model, but first we need to convert it into something our model will understand. Using our *gensim* model we'll convert each word in our reviews into an *m* dimensional word vector (*m=60* in our case):
 
 '''python
+
 	trainVec = []
 	testVec = []
 	for i in range(0,len(train)):
@@ -121,11 +122,12 @@ Now are data is almost ready to be fed to the model, but first we need to conver
 	    
 	trainVec = np.array(trainVec)
 	testVec = np.array(testVec)
-'''
+	'''
 
 After running this we're good to go. Let's start building the model:
 
 '''python
+
 	from keras.models import Sequential
 	from keras.layers import Dense, Activation, MaxPooling2D
 	from keras.layers import Convolution2D, Flatten, Dropout
