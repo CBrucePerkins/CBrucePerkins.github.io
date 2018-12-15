@@ -98,9 +98,7 @@ That will do just fine. Let's move on to the last steps.
 
 Now are data is almost ready to be fed to the model, but first we need to convert it into something our model will understand. Using our *gensim* model we'll convert each word in our reviews into an *m* dimensional word vector (*m=60* in our case):
 
-'''
-python
-
+'''python
 	trainVec = []
 	testVec = []
 	for i in range(0,len(train)):
@@ -123,7 +121,6 @@ python
 	    
 	trainVec = np.array(trainVec)
 	testVec = np.array(testVec)
-
 '''
 
 After running this we're good to go. Let's start building the model:
