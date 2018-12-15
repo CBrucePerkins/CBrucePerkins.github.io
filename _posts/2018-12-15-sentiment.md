@@ -32,17 +32,17 @@ This is going to be a problem later on if we don't do anything about it. Since w
 In order for our machines to process the text data contained in the reviews, we'll need to tokenize it first. We'll be splitting paragraphs and sentences up into single words, and removing a few commonly used words that don't tell us much (think of words like "the" and "to"). We'll do this using *gensim's* preprocessing method:
 
 ```python
-	tokens = []
-	for i in range(0,len(data)):
-	    temp = []
-	    temp.append(gensim.utils.simple_preprocess(data["review"][i]))
-	    temp.append(data["sentiment"][i])
-	    tokens.append(temp)
+tokens = []
+for i in range(0,len(data)):
+    temp = []
+    temp.append(gensim.utils.simple_preprocess(data["review"][i]))
+    temp.append(data["sentiment"][i])
+    tokens.append(temp)
 
-	# Test/train split
+# Test/train split
 
-	from sklearn.model_selection import train_test_split
-	train, test = train_test_split(tokens, test_size=0.2)
+from sklearn.model_selection import train_test_split
+train, test = train_test_split(tokens, test_size=0.2)
 ```
 
 Clean and simple. While we're at it we might as well randomly split the data up into training and test samples. The ballpark figure for where to split is said to be around 80/20, so we'll go ahead with that.
@@ -92,7 +92,7 @@ That will do just fine. Let's move on to the last steps.
 
 ### Creating Word Embeddings and training our model
 
-Now are data is almost ready to be fed to the model, but first we need to convert it into something our model will understand. Using our *gensim* model we'll convert each word in our reviews into an *m* dimensional word vector (*m=60* in our case):
+Now our data is almost ready to be fed to the model, but first we need to convert it into something our model will understand. Using our *gensim* model we'll convert each word in our reviews into an *m* dimensional word vector (*m=60* in our case):
 
 ```python
 	trainVec = []
