@@ -3,7 +3,7 @@ title: "Sentiment Analysis of IMDb Reviews"
 date: 2018-12-15
 tags: [machine learning, data science, convolutional neural network, natural language processing]
 header: 
-  image: <img src="{{ site.url }}{{ stie.baseurl }}/images/sentiment/sent.jpg" alt="" height = "540" width ="720">
+  image: <img src="{{ site.url }}{{ stie.baseurl }}/images/sentiment/sent.jpg" alt="">
 ---
 
 # Sentiment Analysis Through Natural Language Processing
