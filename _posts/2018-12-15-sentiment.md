@@ -88,7 +88,7 @@ That should take care of our length issues. Let's take a look at that distributi
 
 <img src="{{ site.url }}{{ stie.baseurl }}/images/sentiment/distcorrect.png" alt="">
 
-That will do just fine. Let's move on to the last steps.
+Disclaimer: this is by no means the right way to go about this. We are indiscriminately cutting out words in order for the data to fit out model. Those words contain information that would influence weights of our model, so a more proper approach would be to pre-process the data without having to just omit some of it. It's possible that simply just vectorizing the data and transforming the data using matrix operations would produce more accurate results, but that's outside our scope here. Let's move on to the last steps.
 
 ### Creating Word Embeddings and training our model
 
