@@ -19,7 +19,7 @@ locale                   : "en-US"
 title                    : "Chris Perkins"
 title_separator          : "-"
 name                     : "Christopher Bruce Perkins"
-description              : "Data Science Portfolio."
+description              : "Posts."
 url                      : # the base hostname & protocol for your site e.g. "https://mmistakes.github.io"
 baseurl                  : # the subpath of your site, e.g. "/blog"
 repository               : # GitHub username/repo-name e.g. "mmistakes/minimal-mistakes"
@@ -105,8 +105,8 @@ analytics:
 author:
   name             : "Christopher Bruce Perkins"
   avatar           : "/images/profile.JPG"
-  bio              : "Data scientist with an interest in Natural Language Processing."
-  location         : "Copenhagen, Denmark"
+  bio              : "DevOps Engineer at KMD A/S."
+  location         : "Århus, Denmark"
   email            :
   links:
     - label: "Email"
